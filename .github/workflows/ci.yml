@@ -87,7 +87,7 @@ jobs:
         # once you have committed migrations.
         run: |
           pnpm db:generate
-          npx prisma db push --skip-generate
+          npx prisma db push
           pnpm db:seed
 
       - name: Run E2E tests
