@@ -77,13 +77,16 @@ jobs:
           api_key: ${{ secrets.NEON_API_KEY }}
           branch_name: e2e-${{ github.run_id }}-${{ github.run_attempt }}
 
-      - name: Migrate + seed
+      - name: Push schema + seed
         env:
           DATABASE_URL: ${{ steps.neon.outputs.db_url_with_pooler }}
           DATABASE_URL_UNPOOLED: ${{ steps.neon.outputs.db_url }}
+        # The template ships no migrations (you own your history). For the ephemeral
+        # test branch we push the schema directly. Swap to `prisma migrate deploy`
+        # once you have committed migrations.
         run: |
           pnpm db:generate
-          npx prisma migrate deploy
+          npx prisma db push --skip-generate
           pnpm db:seed
 
       - name: Run E2E tests
