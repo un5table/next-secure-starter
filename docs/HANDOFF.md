@@ -29,8 +29,8 @@ Fresh starter. The security/auth spine is in place and the build is green:
 6. Flip `CSP_MODE=enforcing` once you've watched `/api/csp-report` for violations.
 
 ## Open decisions
-- Deployment config is `vercel.json` (reliable). Optional modern alternative:
-  `vercel.ts` via `@vercel/config` — migrate if you want typed/dynamic config.
+- Deployment config is `vercel.ts` (typed, via `@vercel/config`). Security headers
+  stay in `next.config.ts` so they apply off-Vercel and in `next dev` too.
 - E2E job in CI is opt-in (`vars.ENABLE_E2E=true` + Neon secrets).
 
 ## Required env vars

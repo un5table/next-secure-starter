@@ -72,4 +72,4 @@ guards, schema discipline, testing). `CLAUDE.md` and `.windsurfrules` point to i
 Import the repo into Vercel, add the **Neon** and **Upstash** Marketplace integrations
 (they auto-provision `DATABASE_URL` / `KV_REST_API_*`), set `AUTH_SECRET`, `AUTH_URL`,
 `CRON_SECRET`, and any OAuth/Resend/Turnstile keys, then deploy. The audit-cleanup cron
-is configured in `vercel.json`.
+is configured in `vercel.ts` (typed config via `@vercel/config`).

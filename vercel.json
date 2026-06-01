@@ -1,9 +1,0 @@
-{
-  "framework": "nextjs",
-  "crons": [
-    {
-      "path": "/api/cron/cleanup-audit",
-      "schedule": "0 2 * * *"
-    }
-  ]
-}
