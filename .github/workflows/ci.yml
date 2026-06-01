@@ -4,6 +4,7 @@ on:
   push:
     branches: [main, master]
   pull_request:
+  workflow_dispatch: # allow manual runs (e.g. to run the opt-in E2E job on demand)
 
 jobs:
   ci:
