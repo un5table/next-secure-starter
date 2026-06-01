@@ -1,3 +1,7 @@
+# Force the patched path-to-regexp under @vercel/config (ReDoS GHSA-9wv6-86v2-598j).
+overrides:
+  "@vercel/routing-utils>path-to-regexp": "^6.3.0"
+
 allowBuilds:
   argon2: true
   sharp: true
