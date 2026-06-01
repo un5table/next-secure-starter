@@ -7,7 +7,10 @@ import { site } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -43,9 +46,7 @@ export default async function RootLayout({
             role="contentinfo"
             className="border-t border-border py-4 text-center text-xs text-muted-foreground"
           >
-            <p>
-              {site.name} &middot; built with the secure Next.js starter
-            </p>
+            <p>{site.name} &middot; built with the secure Next.js starter</p>
           </footer>
         </Providers>
       </body>

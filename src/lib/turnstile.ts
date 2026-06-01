@@ -1,3 +1,5 @@
+import { env } from "@/env";
+
 /**
  * Verifies a Cloudflare Turnstile token server-side. If TURNSTILE_SECRET_KEY is
  * unset (local dev), verification is skipped (returns true) so guest flows work
@@ -7,7 +9,7 @@ export async function verifyTurnstile(
   token: string | undefined,
   ip?: string,
 ): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
+  const secret = env.TURNSTILE_SECRET_KEY;
   if (!secret) return true;
   if (!token) return false;
 

@@ -2,14 +2,19 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock the spine so the route runs without a DB, Redis, or network.
 // vi.hoisted lets these be referenced inside the hoisted vi.mock factories.
-const { auth, noteCreate, appSettingFindFirst, checkRateLimit, verifyTurnstile } =
-  vi.hoisted(() => ({
-    auth: vi.fn(),
-    noteCreate: vi.fn(),
-    appSettingFindFirst: vi.fn(),
-    checkRateLimit: vi.fn(),
-    verifyTurnstile: vi.fn(),
-  }));
+const {
+  auth,
+  noteCreate,
+  appSettingFindFirst,
+  checkRateLimit,
+  verifyTurnstile,
+} = vi.hoisted(() => ({
+  auth: vi.fn(),
+  noteCreate: vi.fn(),
+  appSettingFindFirst: vi.fn(),
+  checkRateLimit: vi.fn(),
+  verifyTurnstile: vi.fn(),
+}));
 
 vi.mock("@/auth", () => ({ auth }));
 vi.mock("@/lib/prisma", () => ({

@@ -1,13 +1,12 @@
 import { Resend } from "resend";
+import { env } from "@/env";
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
-const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? "App";
+const APP_NAME = env.NEXT_PUBLIC_APP_NAME ?? "App";
 // Resend's onboarding@resend.dev works without domain verification for testing.
-const FROM = process.env.RESEND_FROM ?? `${APP_NAME} <onboarding@resend.dev>`;
-const BRAND = process.env.NEXT_PUBLIC_BRAND_COLOR ?? "#2563eb";
+const FROM = env.RESEND_FROM ?? `${APP_NAME} <onboarding@resend.dev>`;
+const BRAND = env.NEXT_PUBLIC_BRAND_COLOR ?? "#2563eb";
 
 function baseTemplate(content: string): string {
   return `<!DOCTYPE html>
@@ -61,7 +60,9 @@ function small(text: string): string {
  */
 async function send(to: string, subject: string, html: string): Promise<void> {
   if (!resend) {
-    console.warn(`[email] RESEND_API_KEY not set — would send to ${to}: "${subject}"`);
+    console.warn(
+      `[email] RESEND_API_KEY not set — would send to ${to}: "${subject}"`,
+    );
     return;
   }
   const { error } = await resend.emails.send({ from: FROM, to, subject, html });
@@ -71,7 +72,10 @@ async function send(to: string, subject: string, html: string): Promise<void> {
   }
 }
 
-export async function sendPasswordResetEmail(to: string, resetUrl: string): Promise<void> {
+export async function sendPasswordResetEmail(
+  to: string,
+  resetUrl: string,
+): Promise<void> {
   const html = baseTemplate(`
     ${p(`We received a request to reset the password for your ${escapeHtml(APP_NAME)} account.`)}
     ${p("Click the button below to choose a new password. This link expires in <strong>15 minutes</strong>.")}
@@ -81,7 +85,10 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string): Prom
   await send(to, `Reset your ${APP_NAME} password`, html);
 }
 
-export async function sendInviteEmail(to: string, inviteUrl: string): Promise<void> {
+export async function sendInviteEmail(
+  to: string,
+  inviteUrl: string,
+): Promise<void> {
   const html = baseTemplate(`
     ${p(`You've been invited to join <strong>${escapeHtml(APP_NAME)}</strong>.`)}
     ${p("Click below to accept your invitation and set up your account. This link expires in <strong>72 hours</strong>.")}
@@ -92,6 +99,10 @@ export async function sendInviteEmail(to: string, inviteUrl: string): Promise<vo
 }
 
 /** Generic sender for ad-hoc transactional emails. */
-export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+export async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+): Promise<void> {
   await send(to, subject, baseTemplate(html));
 }

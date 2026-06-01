@@ -37,10 +37,16 @@ export async function POST(request: Request) {
       select: { allowGuestWrites: true },
     });
     if (settings && !settings.allowGuestWrites) {
-      return NextResponse.json({ error: "Guest writes are disabled" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Guest writes are disabled" },
+        { status: 403 },
+      );
     }
     if (!(await verifyTurnstile(turnstileToken, ip))) {
-      return NextResponse.json({ error: "CAPTCHA verification failed" }, { status: 400 });
+      return NextResponse.json(
+        { error: "CAPTCHA verification failed" },
+        { status: 400 },
+      );
     }
     // Guests prove ownership later with this raw token — returned exactly once.
     manageToken = generateToken();

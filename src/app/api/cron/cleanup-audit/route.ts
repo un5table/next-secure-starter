@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { env } from "@/env";
 
 // Daily cron (see vercel.json) — prunes AuditLog rows older than 30 days and
 // expired one-time tokens. Secured by CRON_SECRET (Vercel sets the Authorization
 // header on cron invocations).
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
-  if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (env.CRON_SECRET && auth !== `Bearer ${env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

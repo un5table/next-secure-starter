@@ -16,7 +16,10 @@ type Ctx = { params: Promise<{ id: string }> };
 // Public read.
 export async function GET(_request: Request, { params }: Ctx) {
   const { id } = await params;
-  const note = await prisma.note.findUnique({ where: { id }, select: noteSelect });
+  const note = await prisma.note.findUnique({
+    where: { id },
+    select: noteSelect,
+  });
   if (!note) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ note });
 }
@@ -27,7 +30,8 @@ export async function PATCH(request: Request, { params }: Ctx) {
   const manageToken = new URL(request.url).searchParams.get("token");
 
   const ownership = await requireNoteOwner(id, manageToken);
-  if (!ownership) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!ownership)
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const json = await request.json().catch(() => null);
   const parsed = updateNoteSchema.safeParse(json);
@@ -52,7 +56,8 @@ export async function DELETE(request: Request, { params }: Ctx) {
   const manageToken = new URL(request.url).searchParams.get("token");
 
   const ownership = await requireNoteOwner(id, manageToken);
-  if (!ownership) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!ownership)
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   await prisma.note.delete({ where: { id } });
   return new NextResponse(null, { status: 204 });

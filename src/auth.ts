@@ -7,6 +7,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/password";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { env } from "@/env";
 import type { Role } from "@/generated/prisma/enums";
 
 declare module "next-auth" {
@@ -21,11 +22,11 @@ declare module "next-auth" {
 // explicitly — the shorthand `Google()` reads AUTH_GOOGLE_ID, not GOOGLE_CLIENT_ID.
 const oauthProviders: NextAuthConfig["providers"] = [];
 
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
   oauthProviders.push(
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
       // Lets a user who first registered with email/password sign in with the
       // same email via OAuth. Required for a smooth multi-method login.
       allowDangerousEmailAccountLinking: true,
@@ -33,11 +34,11 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   );
 }
 
-if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+if (env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET) {
   oauthProviders.push(
     GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
     }),
   );
@@ -46,7 +47,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
 // Dev-only credentials provider — never active in production.
 // First user to log in becomes ADMIN; subsequent users get USER.
 const devProviders =
-  process.env.NODE_ENV !== "production"
+  env.NODE_ENV !== "production"
     ? [
         Credentials({
           id: "dev",
@@ -56,9 +57,10 @@ const devProviders =
             password: { label: "Password", type: "password" },
           },
           async authorize(credentials) {
-            const devPassword = process.env.DEV_PASSWORD;
+            const devPassword = env.DEV_PASSWORD;
             if (!devPassword) return null;
-            if (!credentials?.email || credentials.password !== devPassword) return null;
+            if (!credentials?.email || credentials.password !== devPassword)
+              return null;
 
             const email = credentials.email as string;
             let user = await prisma.user.findUnique({ where: { email } });
@@ -73,7 +75,12 @@ const devProviders =
                 },
               });
             }
-            return { id: user.id, email: user.email, name: user.name, role: user.role };
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              role: user.role,
+            };
           },
         }),
       ]
@@ -95,13 +102,23 @@ const localCredentials = Credentials({
     const ip = getClientIp(request);
     const email = String(credentials.email);
     if (!(await checkRateLimit(ip, "credentials_signin")).allowed) return null;
-    if (!(await checkRateLimit(email, "credentials_signin")).allowed) return null;
+    if (!(await checkRateLimit(email, "credentials_signin")).allowed)
+      return null;
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user?.passwordHash) return null;
-    const ok = await verifyPassword(user.passwordHash, String(credentials.password));
+    const ok = await verifyPassword(
+      user.passwordHash,
+      String(credentials.password),
+    );
     if (!ok) return null;
-    return { id: user.id, email: user.email, name: user.name, image: user.image, role: user.role };
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      image: user.image,
+      role: user.role,
+    };
   },
 });
 

@@ -73,7 +73,11 @@ export async function requireNoteOwner(
     return { id: note.id, ownerId: note.ownerId };
   }
 
-  if (manageToken && note.ownerTokenHash && hashToken(manageToken) === note.ownerTokenHash) {
+  if (
+    manageToken &&
+    note.ownerTokenHash &&
+    hashToken(manageToken) === note.ownerTokenHash
+  ) {
     return { id: note.id, ownerId: note.ownerId };
   }
 

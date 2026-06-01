@@ -5,7 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 // IMPORTANT: do NOT put authorization logic here — enforce that in route handlers
 // and the server data layer (see src/lib/auth-helpers.ts).
 export function proxy(request: NextRequest) {
-  const nonce = Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString("base64");
+  const nonce = Buffer.from(
+    crypto.getRandomValues(new Uint8Array(16)),
+  ).toString("base64");
 
   const csp = [
     "default-src 'self'",

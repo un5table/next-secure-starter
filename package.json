@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
@@ -15,10 +17,17 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "prepare": "simple-git-hooks"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,jsx,css,md,json,yml,yaml}": "prettier --write"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
@@ -27,6 +36,7 @@
     "@neondatabase/serverless": "^1.1.0",
     "@prisma/adapter-neon": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@t3-oss/env-nextjs": "^0.13.11",
     "@tanstack/react-query": "^5.100.14",
     "@tanstack/react-query-devtools": "^5.100.14",
     "@upstash/ratelimit": "^2.0.8",
@@ -60,9 +70,13 @@
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "eslint-config-prettier": "^10.1.8",
     "jsdom": "^29.1.1",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.3",
     "prisma": "^7.8.0",
     "shadcn": "^4.9.0",
+    "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5",

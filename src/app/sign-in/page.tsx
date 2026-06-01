@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -74,6 +75,12 @@ export default function SignInPage() {
             <Button type="submit" disabled={loading}>
               {loading ? "Signing in…" : "Sign in"}
             </Button>
+            <Link
+              href="/forgot-password"
+              className="text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
+            >
+              Forgot your password?
+            </Link>
           </form>
 
           <div className="flex items-center gap-3 text-xs text-muted-foreground">

@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+// Validate environment variables at build/startup (fail fast on missing/invalid).
+import "./src/env";
 
 // Static security headers applied to every route. The dynamic CSP (with a
 // per-request nonce) lives in src/proxy.ts.
@@ -12,7 +14,10 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
   },
-  { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=31536000; includeSubDomains",
+  },
 ];
 
 const nextConfig: NextConfig = {

@@ -1,5 +1,6 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { env } from "@/env";
 
 // Limits per action, per key (IP or email), using a sliding window.
 // Tune these to your endpoints. Add a new action here, then call checkRateLimit.
@@ -17,14 +18,14 @@ let redis: Redis | null = null;
 const limiters = new Map<Action, Ratelimit>();
 
 function getLimiter(action: Action): Ratelimit | null {
-  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+  if (!env.KV_REST_API_URL || !env.KV_REST_API_TOKEN) {
     return null;
   }
 
   if (!redis) {
     redis = new Redis({
-      url: process.env.KV_REST_API_URL,
-      token: process.env.KV_REST_API_TOKEN,
+      url: env.KV_REST_API_URL,
+      token: env.KV_REST_API_TOKEN,
     });
   }
 

@@ -29,11 +29,17 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z.object({
   token: z.string().min(1),
-  password: z.string().min(8, "Password must be at least 8 characters").max(100),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100),
 });
 
 export const acceptInviteSchema = z.object({
   token: z.string().min(1),
   name: z.string().min(1).max(100),
-  password: z.string().min(8, "Password must be at least 8 characters").max(100),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100),
 });

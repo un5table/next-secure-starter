@@ -7,7 +7,9 @@
 _Last updated: bootstrap — generated from next-secure-starter._
 
 ## Current state
+
 Fresh starter. The security/auth spine is in place and the build is green:
+
 - Auth.js v5 (Google + GitHub OAuth that self-disable without creds, argon2 local
   credentials, dev login, JWT sessions, `passwordChangedAt` invalidation).
 - Prisma 7 + Neon adapter; schema has the auth models + example `Note` resource +
@@ -17,23 +19,32 @@ Fresh starter. The security/auth spine is in place and the build is green:
 - shadcn/ui (Base UI + Lucide), dark mode, sign-in page, landing page.
 - Example `POST/GET /api/notes` + `GET/PATCH/DELETE /api/notes/[id]` showing the
   owned-resource pattern (auth OR guest manage-token). Unit tests + Playwright smoke.
+- **Type-safe env** (`@t3-oss/env-nextjs` + Zod, `src/env.ts`) — build fails fast on
+  missing/invalid env. Bypass with `SKIP_ENV_VALIDATION=1`.
+- **Password reset + invite acceptance** — `/api/auth/{forgot-password,reset-password,
+accept-invite}` routes + `/forgot-password`, `/reset-password`, `/invite/[token]`
+  pages. Scripts: `create-admin`, `create-invite`. Reset-password route has unit tests.
+- **Prettier + pre-commit** (`simple-git-hooks` + `lint-staged`); CI runs `format:check`.
 
 ## Next steps (when starting a real project)
+
 1. Rebrand: set `NEXT_PUBLIC_APP_NAME` / `_APP_URL` / `_BRAND_COLOR`, edit `src/lib/site.ts`.
 2. Provision Neon + Upstash (Vercel Marketplace) and Resend; fill `.env.local`.
 3. `pnpm db:generate && pnpm exec prisma migrate dev --name init && pnpm db:seed`.
 4. Replace the `Note` model + routes with your domain. Keep the spine and the guard
    pattern (`POST /api/notes`).
-5. Build out auth flows you need (forgot/reset password, accept-invite routes + pages)
-   using `sendPasswordResetEmail` / `sendInviteEmail` and the token helpers.
-6. Flip `CSP_MODE=enforcing` once you've watched `/api/csp-report` for violations.
+5. Flip `CSP_MODE=enforcing` once you've watched `/api/csp-report` for violations.
+6. Tier 2+ ideas: `/admin/security` page, react-email templates, expand Playwright to
+   the auth + notes flows, Sentry, multi-tenancy/orgs, publish as a GitHub template repo.
 
 ## Open decisions
+
 - Deployment config is `vercel.ts` (typed, via `@vercel/config`). Security headers
   stay in `next.config.ts` so they apply off-Vercel and in `next dev` too.
 - E2E job in CI is opt-in (`vars.ENABLE_E2E=true` + Neon secrets).
 
 ## Required env vars
+
 See `.env.example`. Locally you only strictly need `DATABASE_URL`,
 `DATABASE_URL_UNPOOLED`, `AUTH_SECRET`, and `DEV_PASSWORD`. Everything else degrades
 gracefully (OAuth disabled, rate-limit open, email logs to console, Turnstile skipped).
