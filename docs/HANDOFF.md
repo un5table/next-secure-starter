@@ -25,6 +25,15 @@ Fresh starter. The security/auth spine is in place and the build is green:
 accept-invite}` routes + `/forgot-password`, `/reset-password`, `/invite/[token]`
   pages. Scripts: `create-admin`, `create-invite`. Reset-password route has unit tests.
 - **Prettier + pre-commit** (`simple-git-hooks` + `lint-staged`); CI runs `format:check`.
+- **Admin** — `/admin/*` is ADMIN-guarded (`admin/layout.tsx`); `/admin/security` shows
+  AuditLog stats + recent events + CSP mode + a clear-events server action. Admin link
+  appears in the navbar for admins.
+- **react-email** — branded templates in `src/emails/` rendered via `@react-email/render`
+  in `src/lib/email.tsx`. Preview them with `pnpm email` (port 3001).
+- **E2E** — `e2e/auth-notes.spec.ts` covers guest-ownership + authenticated notes flows
+  (opt-in CI job). **Dependabot** weekly (npm + actions).
+
+Published as a private template repo: https://github.com/un5table/next-secure-starter
 
 ## Next steps (when starting a real project)
 
@@ -34,8 +43,8 @@ accept-invite}` routes + `/forgot-password`, `/reset-password`, `/invite/[token]
 4. Replace the `Note` model + routes with your domain. Keep the spine and the guard
    pattern (`POST /api/notes`).
 5. Flip `CSP_MODE=enforcing` once you've watched `/api/csp-report` for violations.
-6. Tier 2+ ideas: `/admin/security` page, react-email templates, expand Playwright to
-   the auth + notes flows, Sentry, multi-tenancy/orgs, publish as a GitHub template repo.
+6. Remaining (Tier 3, optional): Sentry error monitoring, multi-tenancy/orgs, Stripe
+   billing, bot-defense upgrade (Vercel BotID / Arcjet).
 
 ## Open decisions
 

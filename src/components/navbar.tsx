@@ -18,6 +18,15 @@ export async function Navbar() {
           <ThemeToggle />
           {session?.user ? (
             <>
+              {session.user.role === "ADMIN" && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  render={<Link href="/admin/security" />}
+                >
+                  Admin
+                </Button>
+              )}
               <span className="hidden text-sm text-muted-foreground sm:inline">
                 {session.user.name ?? session.user.email}
               </span>

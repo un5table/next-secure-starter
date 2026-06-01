@@ -16,7 +16,11 @@ instead of a to-do list.
   verification, and an `allowGuestWrites` kill-switch on guest endpoints.
 - **Security headers + CSP** — static headers in `next.config.ts`; a per-request CSP
   **nonce** in `src/proxy.ts`, shipping report-only with violations logged to `AuditLog`.
-  Flip to enforcing with one env var.
+  Flip to enforcing with one env var. An ADMIN-only `/admin/security` page surfaces the
+  audit log, event stats, and CSP mode.
+- **Typed env + email** — build-time env validation (`@t3-oss/env-nextjs` + Zod) and
+  branded transactional emails as React components (`src/emails/`, preview with
+  `pnpm email`). Full password-reset and invite-acceptance flows are wired.
 - **shadcn/ui** — Base UI primitives + Lucide, Tailwind v4, dark mode (next-themes),
   sonner toasts, accessible focus states.
 - **Tested example** — a `Note` resource (`POST/GET /api/notes`, `GET/PATCH/DELETE
