@@ -1,0 +1,18 @@
+# .windsurfrules
+
+The canonical project rules live in **AGENTS.md** — read it before significant changes.
+This file is a thin pointer so Windsurf Cascade picks up the same rules as Claude Code.
+
+## Cross-tool continuity
+This repo may be developed with both Claude Code and Windsurf. At the START of a session,
+read `docs/HANDOFF.md` and check `git log --oneline -15` + `git status`. Commit in small,
+descriptive increments. Before ENDING a session, commit outstanding work and update
+`docs/HANDOFF.md`. The shared channel between tools is git + docs/HANDOFF.md — do not
+assume either tool can see the other's chat history or memory.
+
+## Key rules (see AGENTS.md for the full text)
+- Authorization in route handlers, never in `src/proxy.ts`.
+- Guest write endpoints: rate limit + kill-switch + Turnstile + Zod caps.
+- Pooled `DATABASE_URL` for the app, direct `DATABASE_URL_UNPOOLED` for migrations.
+- `pnpm db:generate` after schema changes. Run ESLint + `tsc --noEmit` before committing.
+- Always add/extend tests. Pull current docs for Next 16 / Auth.js v5 / Prisma 7 / Tailwind 4.
