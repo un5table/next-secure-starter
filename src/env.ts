@@ -33,6 +33,9 @@ export const env = createEnv({
     KV_REST_API_URL: z.string().url().optional(),
     KV_REST_API_TOKEN: z.string().optional(),
 
+    // Abuse protection (Arcjet). Optional — falls back to Upstash when unset.
+    ARCJET_KEY: z.string().optional(),
+
     // Turnstile, email, cron.
     TURNSTILE_SECRET_KEY: z.string().optional(),
     RESEND_API_KEY: z.string().optional(),

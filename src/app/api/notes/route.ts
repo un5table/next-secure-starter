@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth-helpers";
 import { generateToken, hashToken } from "@/lib/tokens";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/rate-limit";
+import { protectRequest } from "@/lib/arcjet";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { logAudit } from "@/lib/audit";
 import { createNoteSchema } from "@/lib/schemas";
@@ -13,10 +14,21 @@ export async function POST(request: Request) {
   const session = await getSession();
   const ip = getClientIp(request);
 
-  const rl = await checkRateLimit(ip, "create_resource");
-  if (!rl.allowed) {
-    logAudit("rate-limit-hit", { ip, meta: { action: "create_resource" } });
-    return NextResponse.json({ error: rl.reason }, { status: 429 });
+  // Shield + bot detection + rate limit (Arcjet), or Upstash rate limit as fallback.
+  const protection = await protectRequest(request, {
+    fallbackAction: "create_resource",
+  });
+  if (!protection.ok) {
+    logAudit("rate-limit-hit", {
+      ip,
+      meta: { action: "create_resource", reason: protection.reason },
+    });
+    return NextResponse.json(
+      { error: protection.reason },
+      {
+        status: protection.status,
+      },
+    );
   }
 
   const json = await request.json().catch(() => null);

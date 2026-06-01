@@ -12,8 +12,9 @@ instead of a to-do list.
   server-side session invalidation on password change (`passwordChangedAt`).
 - **Prisma 7 + Neon** — pooled app connection, direct migration connection, generated
   client. Auth adapter models + `AppSetting`, `AuditLog`, invite/reset tokens.
-- **Abuse protection** — Upstash sliding-window rate limits, Cloudflare Turnstile
-  verification, and an `allowGuestWrites` kill-switch on guest endpoints.
+- **Abuse protection** — Arcjet (WAF shield + bot detection + rate limiting) with an
+  Upstash fallback, Cloudflare Turnstile verification, and an `allowGuestWrites`
+  kill-switch on guest endpoints.
 - **Security headers + CSP** — static headers in `next.config.ts`; a per-request CSP
   **nonce** in `src/proxy.ts`, shipping report-only with violations logged to `AuditLog`.
   Flip to enforcing with one env var. An ADMIN-only `/admin/security` page surfaces the

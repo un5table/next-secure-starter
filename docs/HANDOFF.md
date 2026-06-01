@@ -32,6 +32,9 @@ accept-invite}` routes + `/forgot-password`, `/reset-password`, `/invite/[token]
   in `src/lib/email.tsx`. Preview them with `pnpm email` (port 3001).
 - **E2E** — `e2e/auth-notes.spec.ts` covers guest-ownership + authenticated notes flows
   (opt-in CI job). **Dependabot** weekly (npm + actions).
+- **Arcjet** abuse protection (`src/lib/arcjet.ts`, `protectRequest`) — shield + bot
+  detection + rate limiting on `POST /api/notes`, falling back to Upstash when
+  `ARCJET_KEY` is unset. Complements Turnstile (invisible vs. explicit challenge).
 
 Published as a private template repo: https://github.com/un5table/next-secure-starter
 
@@ -44,7 +47,7 @@ Published as a private template repo: https://github.com/un5table/next-secure-st
    pattern (`POST /api/notes`).
 5. Flip `CSP_MODE=enforcing` once you've watched `/api/csp-report` for violations.
 6. Remaining (Tier 3, optional): Sentry error monitoring, multi-tenancy/orgs, Stripe
-   billing, bot-defense upgrade (Vercel BotID / Arcjet).
+   billing.
 
 ## Open decisions
 

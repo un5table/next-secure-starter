@@ -38,10 +38,11 @@ deletes intact. The Prisma client is generated to `src/generated/prisma` (gitign
 
 ## ABUSE — Guard guest endpoints
 
-Any unauthenticated write must: enforce an Upstash per-key rate limit
-(`checkRateLimit`), honor the `AppSetting.allowGuestWrites` kill-switch, require a
-Cloudflare Turnstile token (`verifyTurnstile`), and apply Zod field-length caps. See
-`POST /api/notes` for the canonical shape — copy it for new guest endpoints.
+Any unauthenticated write must: call `protectRequest` (Arcjet shield + bot detection +
+rate limit, falling back to the Upstash limiter when `ARCJET_KEY` is unset), honor the
+`AppSetting.allowGuestWrites` kill-switch, require a Cloudflare Turnstile token
+(`verifyTurnstile`), and apply Zod field-length caps. See `POST /api/notes` for the
+canonical shape — copy it for new guest endpoints.
 
 ## SEC — Security headers & CSP
 

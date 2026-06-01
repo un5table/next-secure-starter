@@ -6,13 +6,13 @@ const {
   auth,
   noteCreate,
   appSettingFindFirst,
-  checkRateLimit,
+  protectRequest,
   verifyTurnstile,
 } = vi.hoisted(() => ({
   auth: vi.fn(),
   noteCreate: vi.fn(),
   appSettingFindFirst: vi.fn(),
-  checkRateLimit: vi.fn(),
+  protectRequest: vi.fn(),
   verifyTurnstile: vi.fn(),
 }));
 
@@ -23,10 +23,8 @@ vi.mock("@/lib/prisma", () => ({
     appSetting: { findFirst: appSettingFindFirst },
   },
 }));
-vi.mock("@/lib/rate-limit", () => ({
-  checkRateLimit,
-  getClientIp: () => "1.2.3.4",
-}));
+vi.mock("@/lib/arcjet", () => ({ protectRequest }));
+vi.mock("@/lib/rate-limit", () => ({ getClientIp: () => "1.2.3.4" }));
 vi.mock("@/lib/turnstile", () => ({ verifyTurnstile }));
 vi.mock("@/lib/audit", () => ({ logAudit: vi.fn() }));
 
@@ -43,7 +41,7 @@ function req(body: unknown) {
 beforeEach(() => {
   vi.clearAllMocks();
   auth.mockResolvedValue(null);
-  checkRateLimit.mockResolvedValue({ allowed: true });
+  protectRequest.mockResolvedValue({ ok: true });
   verifyTurnstile.mockResolvedValue(true);
   appSettingFindFirst.mockResolvedValue({ allowGuestWrites: true });
   noteCreate.mockResolvedValue({
@@ -55,8 +53,12 @@ beforeEach(() => {
 });
 
 describe("POST /api/notes", () => {
-  it("returns 429 when rate limited", async () => {
-    checkRateLimit.mockResolvedValue({ allowed: false, reason: "slow down" });
+  it("returns the protection status when blocked (rate limit / bot / shield)", async () => {
+    protectRequest.mockResolvedValue({
+      ok: false,
+      status: 429,
+      reason: "slow down",
+    });
     const res = await POST(req({ title: "Hi" }));
     expect(res.status).toBe(429);
     expect(noteCreate).not.toHaveBeenCalled();

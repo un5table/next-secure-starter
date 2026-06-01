@@ -31,6 +31,7 @@
     "*.{ts,tsx,js,mjs,jsx,css,md,json,yml,yaml}": "prettier --write"
   },
   "dependencies": {
+    "@arcjet/next": "^1.4.0",
     "@auth/prisma-adapter": "^2.11.2",
     "@base-ui/react": "^1.5.0",
     "@marsidev/react-turnstile": "^1.5.2",
