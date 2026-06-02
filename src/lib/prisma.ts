@@ -1,11 +1,10 @@
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "../generated/prisma/client";
+import { createDbAdapter } from "@/lib/db-adapter";
 import { env } from "@/env";
 
 function createPrismaClient() {
-  const adapter = new PrismaNeon({ connectionString: env.DATABASE_URL });
   return new PrismaClient({
-    adapter,
+    adapter: createDbAdapter(env.DATABASE_URL),
     log:
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });

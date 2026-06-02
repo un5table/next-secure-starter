@@ -1,11 +1,11 @@
 // Creates a UserInvite and prints the acceptance URL (for testing the invite flow).
 // Usage (PowerShell):
 //   pnpm tsx --env-file=.env.local scripts/create-invite.ts you@example.com ADMIN
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { createDbAdapter } from "../src/lib/db-adapter";
 import { randomBytes, createHash } from "crypto";
 
-const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
+const adapter = createDbAdapter(process.env.DATABASE_URL!);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

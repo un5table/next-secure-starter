@@ -1,11 +1,11 @@
 // Bootstraps an ADMIN user with local credentials.
 // Usage (PowerShell):
 //   $env:ADMIN_PW="..."; pnpm tsx --env-file=.env.local scripts/create-admin.ts you@example.com
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { createDbAdapter } from "../src/lib/db-adapter";
 import argon2 from "argon2";
 
-const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
+const adapter = createDbAdapter(process.env.DATABASE_URL!);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

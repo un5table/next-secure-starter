@@ -10,8 +10,10 @@ instead of a to-do list.
 - **Auth.js v5** — Google + GitHub OAuth (self-disable when creds are absent),
   email/password with **argon2id**, JWT sessions, role-based access, a dev login, and
   server-side session invalidation on password change (`passwordChangedAt`).
-- **Prisma 7 + Neon** — pooled app connection, direct migration connection, generated
-  client. Auth adapter models + `AppSetting`, `AuditLog`, invite/reset tokens.
+- **Prisma 7 + any Postgres** — the driver adapter is chosen from the connection
+  string (Neon's serverless driver for `*.neon.tech`, node-postgres for local Docker,
+  Supabase, RDS, Railway, …), so no DB host is baked in. Auth adapter models +
+  `AppSetting`, `AuditLog`, invite/reset tokens.
 - **Abuse protection** — Arcjet (WAF shield + bot detection + rate limiting) with an
   Upstash fallback, Cloudflare Turnstile verification, and an `allowGuestWrites`
   kill-switch on guest endpoints.
@@ -30,14 +32,20 @@ instead of a to-do list.
 - **Error monitoring** — Sentry (`@sentry/nextjs`) via instrumentation files +
   `withSentryConfig`; fully no-op without a DSN, CSP-aware, source-map upload opt-in.
   `GET /api/debug-sentry` to verify capture.
-- **CI** — lint → audit → type-check → unit tests → build, with an opt-in Neon-branch
-  E2E job.
+- **CI** — lint → audit → type-check → unit tests → build, plus a self-contained
+  Playwright E2E job that runs against a throwaway Postgres service container (no
+  accounts or secrets needed). An opt-in `e2e-neon.yml` tests against real Neon.
 
 ## Quick start
 
 ```bash
 pnpm install
-cp .env.example .env.local        # fill in DATABASE_URL(_UNPOOLED), AUTH_SECRET, DEV_PASSWORD
+cp .env.example .env.local        # fill in DATABASE_URL, AUTH_SECRET, DEV_PASSWORD
+
+# Need a database? Any Postgres works. Quickest local option:
+docker run -d --name pg -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:17
+# (then keep the default DATABASE_URL from .env.example)
+
 pnpm db:generate                  # generate the Prisma client (required before dev/build)
 pnpm exec prisma migrate dev --name init
 pnpm db:seed                      # seed AppSetting defaults
@@ -77,7 +85,8 @@ guards, schema discipline, testing). `CLAUDE.md` and `.windsurfrules` point to i
 
 ## Deploy
 
-Import the repo into Vercel, add the **Neon** and **Upstash** Marketplace integrations
-(they auto-provision `DATABASE_URL` / `KV_REST_API_*`), set `AUTH_SECRET`, `AUTH_URL`,
+Import the repo into Vercel and provide a `DATABASE_URL` for any Postgres — the
+**Neon** and **Upstash** Marketplace integrations auto-provision `DATABASE_URL` /
+`KV_REST_API_*`, or point it at Supabase/RDS/your own. Set `AUTH_SECRET`, `AUTH_URL`,
 `CRON_SECRET`, and any OAuth/Resend/Turnstile keys, then deploy. The audit-cleanup cron
 is configured in `vercel.ts` (typed config via `@vercel/config`).

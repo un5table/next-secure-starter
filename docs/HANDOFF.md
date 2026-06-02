@@ -30,8 +30,12 @@ accept-invite}` routes + `/forgot-password`, `/reset-password`, `/invite/[token]
   appears in the navbar for admins.
 - **react-email** — branded templates in `src/emails/` rendered via `@react-email/render`
   in `src/lib/email.tsx`. Preview them with `pnpm email` (port 3001).
-- **E2E** — `e2e/auth-notes.spec.ts` covers guest-ownership + authenticated notes flows
-  (opt-in CI job). **Dependabot** weekly (npm + actions).
+- **E2E** — `e2e/auth-notes.spec.ts` covers guest-ownership + authenticated notes flows,
+  running against a throwaway Postgres service container in CI (no accounts/secrets).
+  **Dependabot** weekly (npm + actions).
+- **Host-agnostic DB** — `src/lib/db-adapter.ts` picks the Prisma driver adapter from
+  the URL (Neon serverless for `*.neon.tech`, node-postgres otherwise), so the app and
+  all scripts/seed run on any Postgres.
 - **Arcjet** abuse protection (`src/lib/arcjet.ts`, `protectRequest`) — shield + bot
   detection + rate limiting on `POST /api/notes`, falling back to Upstash when
   `ARCJET_KEY` is unset. Complements Turnstile (invisible vs. explicit challenge).
@@ -45,7 +49,8 @@ Published as a private template repo: https://github.com/un5table/next-secure-st
 ## Next steps (when starting a real project)
 
 1. Rebrand: set `NEXT_PUBLIC_APP_NAME` / `_APP_URL` / `_BRAND_COLOR`, edit `src/lib/site.ts`.
-2. Provision Neon + Upstash (Vercel Marketplace) and Resend; fill `.env.local`.
+2. Provide a `DATABASE_URL` (any Postgres — local Docker, Neon, Supabase, RDS…); add
+   Upstash + Resend when you want rate limiting and real email. Fill `.env.local`.
 3. `pnpm db:generate && pnpm exec prisma migrate dev --name init && pnpm db:seed`.
 4. Replace the `Note` model + routes with your domain. Keep the spine and the guard
    pattern (`POST /api/notes`).
@@ -56,10 +61,11 @@ Published as a private template repo: https://github.com/un5table/next-secure-st
 
 - Deployment config is `vercel.ts` (typed, via `@vercel/config`). Security headers
   stay in `next.config.ts` so they apply off-Vercel and in `next dev` too.
-- E2E job in CI is opt-in (`vars.ENABLE_E2E=true` + Neon secrets). It now runs against
-  this starter's **own dedicated Neon project** `next-secure-starter`
-  (`patient-sun-99685153`, personal org `org-purple-field-23332033`) with a
-  project-scoped API key — fully isolated from rtime. Verified green run `26791583182`.
+- E2E (`ci.yml`) runs on every push/PR against a `postgres:17` service container —
+  no external accounts, secrets, or opt-in flags. To test against real Neon instead,
+  run the opt-in `e2e-neon.yml` (manual; needs your own `NEON_PROJECT_ID` +
+  `NEON_API_KEY` secrets and `vars.ENABLE_NEON_E2E=true`). `scripts/setup-neon.mjs`
+  provisions a dedicated Neon project and prints the wiring commands.
 
 ## Required env vars
 

@@ -15,7 +15,10 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
 
-    // Database (Neon). Pooled for the app, direct for migrations.
+    // Database — any Postgres (local Docker, Supabase, RDS, Neon, ...). The driver
+    // adapter is chosen from the URL in src/lib/prisma.ts. DATABASE_URL is the app
+    // connection (pooled on Neon); DATABASE_URL_UNPOOLED is the direct connection
+    // used for migrations (only meaningful on Neon — falls back to DATABASE_URL).
     DATABASE_URL: z.string().url(),
     DATABASE_URL_UNPOOLED: z.string().url().optional(),
 
