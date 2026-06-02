@@ -27,6 +27,9 @@ instead of a to-do list.
 - **Tested example** — a `Note` resource (`POST/GET /api/notes`, `GET/PATCH/DELETE
 /api/notes/[id]`) demonstrating ownership via session **or** a hashed guest token,
   with Vitest unit tests and a Playwright smoke test.
+- **Error monitoring** — Sentry (`@sentry/nextjs`) via instrumentation files +
+  `withSentryConfig`; fully no-op without a DSN, CSP-aware, source-map upload opt-in.
+  `GET /api/debug-sentry` to verify capture.
 - **CI** — lint → audit → type-check → unit tests → build, with an opt-in Neon-branch
   E2E job.
 

@@ -9,6 +9,11 @@ export function proxy(request: NextRequest) {
     crypto.getRandomValues(new Uint8Array(16)),
   ).toString("base64");
 
+  // Allow the browser SDK to POST events to Sentry's ingest only when configured.
+  const sentry = process.env.NEXT_PUBLIC_SENTRY_DSN
+    ? " https://*.sentry.io"
+    : "";
+
   const csp = [
     "default-src 'self'",
     // 'strict-dynamic' lets scripts loaded by a nonced script (the React bundle)
@@ -19,7 +24,7 @@ export function proxy(request: NextRequest) {
     // Allow HTTPS images for OAuth provider avatars.
     "img-src 'self' data: https:",
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src 'self'${sentry}`,
     // Turnstile renders as an iframe from Cloudflare.
     "frame-src 'self' challenges.cloudflare.com",
     "object-src 'none'",

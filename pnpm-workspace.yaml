@@ -12,3 +12,6 @@ allowBuilds:
   "@prisma/engines": true
   msw: true
   simple-git-hooks: true
+  # Only needed to download the sentry-cli binary for source-map upload (opt-in).
+  # Flip to true if you set SENTRY_AUTH_TOKEN and want uploaded source maps.
+  "@sentry/cli": false

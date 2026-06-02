@@ -42,6 +42,11 @@ export const env = createEnv({
     RESEND_FROM: z.string().optional(),
     CRON_SECRET: z.string().optional(),
 
+    // Sentry error monitoring (all optional — no-ops without NEXT_PUBLIC_SENTRY_DSN).
+    SENTRY_AUTH_TOKEN: z.string().optional(),
+    SENTRY_ORG: z.string().optional(),
+    SENTRY_PROJECT: z.string().optional(),
+
     // Security.
     CSP_MODE: z.enum(["enforcing", "report-only"]).optional(),
 
@@ -53,6 +58,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.string().url().optional(),
     NEXT_PUBLIC_BRAND_COLOR: z.string().optional(),
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
   },
   // Client/public vars must be destructured explicitly — Next.js inlines them.
   experimental__runtimeEnv: {
@@ -60,6 +66,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_BRAND_COLOR: process.env.NEXT_PUBLIC_BRAND_COLOR,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   },
   // Treat "" the same as unset, so blank .env entries fall back to defaults.
   emptyStringAsUndefined: true,

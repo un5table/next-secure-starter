@@ -35,6 +35,10 @@ accept-invite}` routes + `/forgot-password`, `/reset-password`, `/invite/[token]
 - **Arcjet** abuse protection (`src/lib/arcjet.ts`, `protectRequest`) — shield + bot
   detection + rate limiting on `POST /api/notes`, falling back to Upstash when
   `ARCJET_KEY` is unset. Complements Turnstile (invisible vs. explicit challenge).
+- **Sentry** error monitoring (`src/instrumentation*.ts`, `src/sentry.*.config.ts`,
+  `withSentryConfig`) — no-op without `NEXT_PUBLIC_SENTRY_DSN`; CSP allows Sentry ingest
+  only when configured; source-map upload opt-in (`SENTRY_AUTH_TOKEN` + flip
+  `@sentry/cli` to true). Verify with `GET /api/debug-sentry`.
 
 Published as a private template repo: https://github.com/un5table/next-secure-starter
 
@@ -46,8 +50,7 @@ Published as a private template repo: https://github.com/un5table/next-secure-st
 4. Replace the `Note` model + routes with your domain. Keep the spine and the guard
    pattern (`POST /api/notes`).
 5. Flip `CSP_MODE=enforcing` once you've watched `/api/csp-report` for violations.
-6. Remaining (Tier 3, optional): Sentry error monitoring, multi-tenancy/orgs, Stripe
-   billing.
+6. Remaining (Tier 3, optional): multi-tenancy/orgs, Stripe billing.
 
 ## Open decisions
 
