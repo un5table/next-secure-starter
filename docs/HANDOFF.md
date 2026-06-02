@@ -56,7 +56,10 @@ Published as a private template repo: https://github.com/un5table/next-secure-st
 
 - Deployment config is `vercel.ts` (typed, via `@vercel/config`). Security headers
   stay in `next.config.ts` so they apply off-Vercel and in `next dev` too.
-- E2E job in CI is opt-in (`vars.ENABLE_E2E=true` + Neon secrets).
+- E2E job in CI is opt-in (`vars.ENABLE_E2E=true` + Neon secrets). It now runs against
+  this starter's **own dedicated Neon project** `next-secure-starter`
+  (`patient-sun-99685153`, personal org `org-purple-field-23332033`) with a
+  project-scoped API key — fully isolated from rtime. Verified green run `26791583182`.
 
 ## Required env vars
 
