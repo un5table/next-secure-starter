@@ -35,5 +35,7 @@ export default withSentryConfig(nextConfig, {
   authToken: process.env.SENTRY_AUTH_TOKEN,
   silent: !process.env.CI,
   sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
-  disableLogger: true,
+  // Tree-shake Sentry's own debug logging out of the production bundle
+  // (replaces the deprecated top-level `disableLogger`; webpack builds only).
+  webpack: { treeshake: { removeDebugLogging: true } },
 });
