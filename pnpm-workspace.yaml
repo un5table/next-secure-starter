@@ -1,6 +1,14 @@
-# Force the patched path-to-regexp under @vercel/config (ReDoS GHSA-9wv6-86v2-598j).
+# Force patched versions of vulnerable transitive deps (Dependabot can't open PRs
+# for deeply-nested transitive packages in pnpm, so we pin them here).
 overrides:
+  # ReDoS in path-to-regexp via @vercel/config (GHSA-9wv6-86v2-598j).
   "@vercel/routing-utils>path-to-regexp": "^6.3.0"
+  # XSS in PostCSS CSS stringify output (GHSA-7fh5-64p2-3v2j); next bundles 8.4.31.
+  postcss: "^8.5.10"
+  # Missing buffer bounds check in uuid v3/v5/v6 (GHSA-7wf2-mwm7-c7gw); via arcjet.
+  uuid: "^11.1.1"
+  # serveStatic middleware bypass via repeated slashes (GHSA-9hgv-fx9q-mw9h).
+  "@hono/node-server": "^1.19.13"
 
 allowBuilds:
   argon2: true
