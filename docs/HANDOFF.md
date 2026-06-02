@@ -44,7 +44,11 @@ accept-invite}` routes + `/forgot-password`, `/reset-password`, `/invite/[token]
   only when configured; source-map upload opt-in (`SENTRY_AUTH_TOKEN` + flip
   `@sentry/cli` to true). Verify with `GET /api/debug-sentry`.
 
-Published as a private template repo: https://github.com/un5table/next-secure-starter
+- **Public template repo** — https://github.com/un5table/next-secure-starter (MIT).
+  `main` is branch-protected (PR + green `ci` and `E2E` checks required, strict, no
+  force-push/delete; admin can bypass). Security: secret scanning + push protection +
+  Dependabot security updates on; CodeQL (`.github/workflows/codeql.yml`).
+- **Rebrand in one command** — `node scripts/rename.mjs "My App" --color … --url …`.
 
 ## Next steps (when starting a real project)
 
