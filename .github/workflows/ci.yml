@@ -83,10 +83,10 @@ jobs:
           DATABASE_URL: ${{ steps.neon.outputs.db_url_with_pooler }}
           DATABASE_URL_UNPOOLED: ${{ steps.neon.outputs.db_url }}
         # The template ships no migrations (you own your history). For the ephemeral
-        # test branch we push the schema directly. --force-reset clean-slates the
-        # branch so this works even when NEON_PROJECT_ID points at a project that
-        # already has an unrelated schema. Swap to `prisma migrate deploy` once you
-        # have committed migrations.
+        # test branch we push the schema directly. --force-reset guarantees a clean
+        # slate on each run. NEON_PROJECT_ID points at this starter's own dedicated
+        # Neon project, so the parent branch is empty anyway. Swap to
+        # `prisma migrate deploy` once you have committed migrations.
         run: |
           pnpm db:generate
           npx prisma db push --force-reset
