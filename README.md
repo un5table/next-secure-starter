@@ -1,5 +1,8 @@
 # next-secure-starter
 
+[![CI](https://github.com/un5table/next-secure-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/un5table/next-secure-starter/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 A production-grade, **security-first** Next.js 16 starter for Vercel. It bakes in the
 hard parts most templates skip — auth done correctly, rate limiting, CSP, audit logging,
 and a tested owned-resource pattern — so a new project starts from a defensible baseline
@@ -73,7 +76,8 @@ pnpm db:studio      # Prisma Studio
 
 ## Make it yours
 
-1. Rebrand via `NEXT_PUBLIC_APP_NAME` / `_APP_URL` / `_BRAND_COLOR` and `src/lib/site.ts`.
+1. Rebrand in one command: `node scripts/rename.mjs "My App" --color "#7c3aed" --url "https://myapp.com"`
+   (rewrites `.env.example`, `package.json`, `src/lib/site.ts`, and the README title).
 2. Replace the `Note` model and its routes with your domain — **keep the spine** and copy
    the guard pattern in `POST /api/notes` for any new guest-writable endpoint.
 3. Add UI with `pnpm dlx shadcn@latest add <component>`.
