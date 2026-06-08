@@ -85,11 +85,11 @@
     "prettier": "^3.8.3",
     "prisma": "^7.8.0",
     "react-email": "^6.5.0",
-    "shadcn": "^4.9.0",
+    "shadcn": "^4.10.0",
     "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.8"
   }
 }
